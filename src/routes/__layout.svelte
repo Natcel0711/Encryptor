@@ -1,0 +1,9 @@
+<script>
+  import "../app.css";
+  import Nav from "../components/nav.svelte";
+</script>
+
+<main>
+  <Nav></Nav>
+  <slot />
+</main>
