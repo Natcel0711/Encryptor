@@ -1,25 +1,21 @@
 <script>
-  export let unencrypted = "";
-  import {encrypt, decrypt, encrypted} from "../stores/CrypStore.js"
+	import Encrypter from '../components/encrypt.svelte';
+	import Decrypter from '../components/decrypt.svelte';
+  let encryptMode = true;
+  function toggleEncryptMode() {
+  encryptMode = !encryptMode;
+}
 </script>
+
 <div>
-  <div>
-    <h1>Encryptor</h1>
-  </div>
-  <div>
-    <input type="text" bind:value={unencrypted}>
-  </div>
-  <div>
-    <button on:click={encrypt(unencrypted)}>Encrypt</button>
-    <button on:click={decrypt(unencrypted)}>Decrypt</button>
-  </div>
-  <div>
-    <p>
-      {#if unencrypted.length > 0 }
-      {unencrypted} is now {$encrypted}
-      {:else}
-      Waiting for encryption...
-      {/if}
-    </p>
-  </div>
+	<div>
+		<button class="bg-white hover:bg-gray-100 text-gray-800 my-2 font-semibold py-2 px-4 border border-gray-400 rounded shadow" on:click={toggleEncryptMode}>Mode</button>
+	</div>
+	<div class="grid text-4xl py-4 gap-4 grid-cols-1 text-center border-black border">
+		{#if encryptMode}
+			<Encrypter />
+		{:else}
+			<Decrypter />
+		{/if}
+	</div>
 </div>
