@@ -30,6 +30,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/supabase-js": "^1.35.4",
 		"crypto-js": "^4.1.1"
 	}
 }

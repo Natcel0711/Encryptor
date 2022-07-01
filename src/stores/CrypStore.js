@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import { writable } from 'svelte/store';
+import {supabase} from '../supabase.js';
 export let encrypted = writable('');
 export let decrypted = writable('');
 export let EncryptionType = writable('Base64');
@@ -22,15 +23,27 @@ export const encryptionManager = (text) => {
     EncryptionType.update(n => 'Base64');
 }
 
-export const encrypt = (text, key, type) => {
+export const encrypt = async (text, key, type) => {
+  let encryption = "";
   if(type === 'AES')
-    encrypted.set(CryptoJS.AES.encrypt(text, key).toString());
+    encryption = CryptoJS.AES.encrypt(text, key).toString();
   else if(type === 'DES')
-    encrypted.set(CryptoJS.DES.encrypt(text, key).toString());
+    encryption = CryptoJS.DES.encrypt(text, key).toString();
   else if(type === 'RC4')
-    encrypted.set(CryptoJS.RC4.encrypt(text, key).toString());
+    encryption = CryptoJS.RC4.encrypt(text, key).toString();
   else if(type === 'Base64')
-    encrypted.set(CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(text)));
+    encryption = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(text));
+  encrypted.set(encryption);
+  const {data, error} = await supabase.from('Encrypted').insert({
+    Unencrypted: text,
+    Key: key,
+    EncryptType: type,
+    Encrypted: encryption
+  });
+  if(error){
+     return console.log(error);
+  }
+  console.log(data);
 }
 export const decrypt = (text, key, type) => {
   if(type === 'AES')
